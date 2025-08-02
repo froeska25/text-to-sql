@@ -1,0 +1,425 @@
+schema_linking_prompt = '''Tabela empresa, colunas = [*,ID_Empresa,Nome_Empresa,Ano,Sistemas_Online]
+Tabela funcionario, colunas = [*,ID_Funcionario,ID_Empresa,Nome_Funcionario,Data_Admissao]
+Chaves_estrangeiras: [funcionario.ID_Empresa = empresa.ID_Empresa]
+P: "Quais empresas possuem sistemas online e têm funcionários contratados nos últimos 3 anos?"
+R: Vamos pensar passo a passo. Na questão "Quais empresas possuem sistemas online e têm funcionários contratados nos últimos 3 anos?", nos é perguntado:
+"Quais empresas" então precisamos da coluna = [empresa.Nome_Empresa]
+"possuem sistemas online" então precisamos da coluna = [empresa.Sistemas_Online]
+"funcionários contratados nos últimos 3 anos" então precisamos da coluna = [funcionario.Data_Admissao]
+Baseado nas colunas e tabelas, precisamos das Chaves_estrangeiras = [funcionario.ID_Empresa = empresa.ID_Empresa].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [2022,2023,2024]. Então os Schema_links são:
+Schema_links: [empresa.Nome_Empresa,empresa.Possui_Sistemas_Online,1,funcionario.Data_Admissao,2022,2023,2024,funcionario.ID_Empresa = empresa.ID_Empresa]
+
+Tabela cidade, colunas = [*,Ano,ID_Cidade,Nome,Area_km_2,Ranking_Censo,Postos_Saude]
+Tabela populacao, colunas = [*,Ano,ID_Cidade,Num_Pessoas]
+Chaves_estrangeiras: [populacao.ID_Cidade = cidade.ID_Cidade]
+P: "Mostre as cidades com mais de 5000 habitantes e que não possuem postos de saúde de acordo com os dados dos últimos 2 anos."
+R: Vamos pensar passo a passo. Na questão "Mostre as cidades com mais de 5000 habitantes e que não possuem postos de saúde de acordo com os dados dos últimos 2 anos.", nos é perguntado:
+"Mostre as cidades", então precisamos da coluna = [cidade.Nome]
+"com mais de 5000 habitantes" então precisamos da coluna = [populacao.Num_Pessoas]
+"não possuem postos de saúde" então precisamos da coluna = [cidade.Postos_Saude]
+"dados dos últimos 2 anos" então precisamos da coluna = [populacao.Ano]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [populacao.ID_Cidade = cidade.ID_Cidade].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [5000,0,2023,2024]. Então os Schema_links são:
+Schema_links: [cidade.Nome,populacao.Num_Pessoas,5000,cidade.Postos_Saude,0,populacao.ID_Cidade = cidade.ID_Cidade,populacao.Ano,2023,2024]
+
+Tabela hospital, colunas = [*,ID_Hospital,Nome_Hospital,Cidade,SUS,UTI]
+Tabela atendimento, colunas = [*,ID_Hospital,Ano,Num_Atendimentos]
+Chaves_estrangeiras: [atendimento.ID_Hospital = hospital.ID_Hospital]
+P: "Quais hospitais que atendem pelo SUS e não têm UTI realizaram mais de 1000 atendimentos nos últimos dois anos?"
+R: Vamos pensar passo a passo. Na questão "Quais hospitais que atendem pelo SUS e não têm UTI realizaram mais de 1000 atendimentos nos últimos dois anos?", nos é perguntado:
+"Quais hospitais" então precisamos da coluna = [hospital.Nome_Hospital]
+"que atendem pelo SUS" então precisamos da coluna = [hospital.SUS]
+"não têm UTI" então precisamos da coluna = [hospital.UTI]
+"mais de 1000 atendimentos" então precisamos da coluna = [atendimento.Num_Atendimentos]
+"nos últimos dois anos" então precisamos da coluna = [atendimento.Ano]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [atendimento.ID_Hospital = hospital.ID_Hospital].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [1,0,1000,2023,2024]. Então os Schema_links são:
+Schema_links: [hospital.Nome_Hospital,hospital.SUS,1,hospital.UTI,0,atendimento.Num_Atendimentos,1000,atendimento.Ano,2023,2024,atendimento.ID_Hospital = hospital.ID_Hospital]
+
+Tabela departamento, colunas = [*,ID_Departamento,Nome,Criacao,Ranking,Orcamento_em_Bilhoes,Num_Funcionarios]
+Tabela chefe, colunas = [*,ID_Chefe,nome,estado_nascimento,idade]
+Tabela gerencia, colunas = [*,ID_Departamento,ID_Chefe,interino]
+Chaves_estrangeiras = [gerencia.ID_Chefe = chefe.ID_Chefe,gerencia.ID_Departamento = departamento.ID_Departamento]
+P: "Quantos chefes de departamento têm mais de 56 anos?"
+R: Vamos pensar passo a passo. Na pergunta "Quantos chefes de departamento têm mais de 56 anos?", nos é perguntado:
+"Quantos chefes de departamento" então precisamos da coluna = [chefe.*]
+"mais de 56 anos" então precisamos da coluna = [chefe.idade]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [56]. Então os Schema_links são:
+Schema_links: [chefe.*,chefe.idade,56]
+
+Tabela Pais, colunas = [*,id,nome]
+Tabela Liga, colunas = [*,id,id_pais,nome]
+Tabela Jogador, colunas = [*,id,id_api_jogador,nome_jogador,id_fifa_jogador,data_nascimento,altura,peso]
+Tabela Atributos_Jogador, colunas = [*,id,id_fifa_jogador,id_api_jogador,data,avaliacao_geral,potencial,pe_preferido,ritmo_ataque,ritmo_defesa,cruzamentos,finalizacao,cabeca,passe_curto,voleios,drible,curva,precisao_livre,passes_longos,controle_bola,aceleracao,velocidade,agilidade,reacoes,equilibrio,forca_chute,salto,resistencia,forca,chute_longo,agressividade,interceptacoes,posicionamento,visao,penaltis,marcacao,desarme_em_pe,desarme_com_sc,goleiro_mergulho,goleiro_pe,goleiro_chute,goleiro_posicionamento,goleiro_reflexos]
+Tabela Time, colunas = [*,id,id_api_time,id_fifa_time,nome_time,nome_curto]
+Tabela Atributos_Time, colunas = [*,id,id_fifa_time,id_api_time,data,velocidade_construcao,classe_velocidade_construcao,drible_construcao,classe_drible_construcao,passe_construcao,classe_passe_construcao,classe_posicionamento_construcao,criacao_chance_passe,classe_criacao_chance_passe,criacao_chance_cruzamento,classe_criacao_chance_cruzamento,criacao_chance_chute,classe_criacao_chance_chute,classe_posicionamento_criacao_chance,pressao_defesa,classe_pressao_defesa,agressividade_defesa,classe_agressividade_defesa,largura_defesa,classe_largura_defesa,classe_linha_defesa]
+Chaves_estrangeiras = [Atributos_Jogador.id_api_jogador = Jogador.id_api_jogador,Atributos_Jogador.id_fifa_jogador = Jogador.id_fifa_jogador,Liga.id_pais = Pais.id,Atributos_Time.id_api_time = Time.id_api_time,Atributos_Time.id_fifa_time = Time.id_fifa_time]
+P: "Liste os nomes de todos os jogadores canhotos que têm avaliação geral entre 85 e 90."
+R: Vamos pensar passo a passo. Na pergunta "Liste os nomes de todos os jogadores canhotos que têm avaliação geral entre 85 e 90.", nos é perguntado:
+"nomes de todos os jogadores canhotos" então precisamos das colunas = [Jogador.nome_jogador,Atributos_Jogador.pe_preferido]
+"jogadores que têm avaliação geral" então precisamos da coluna = [Atributos_Jogador.avaliacao_geral]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [Atributos_Jogador.id_api_jogador = Jogador.id_api_jogador].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [esquerdo,85,90]. Então os Schema_links são:
+Schema_links: [Jogador.nome_jogador,Atributos_Jogador.pe_preferido,Atributos_Jogador.avaliacao_geral,Atributos_Jogador.id_api_jogador = Jogador.id_api_jogador,esquerdo,85,90]
+
+Tabela orientador, colunas = [*,s_ID,i_ID]
+Tabela sala_de_aula, colunas = [*,predio,numero_sala,capacidade]
+Tabela curso, colunas = [*,id_curso,titulo,nome_dept,creditos]
+Tabela departamento, colunas = [*,nome_dept,predio,orcamento]
+Tabela instrutor, colunas = [*,ID,nome,nome_dept,salario]
+Tabela prereq, colunas = [*,id_curso,id_prereq]
+Tabela secao, colunas = [*,id_curso,id_secao,semestre,ano,predio,numero_sala,id_intervalo_tempo]
+Tabela estudante, colunas = [*,ID,nome,nome_dept,total_cred]
+Tabela cursa, colunas = [*,ID,id_curso,id_secao,semestre,ano,nota]
+Tabela ensina, colunas = [*,ID,id_curso,id_secao,semestre,ano]
+Tabela intervalo_tempo, colunas = [*,id_intervalo_tempo,dia,hora_inicio,minuto_inicio,hora_fim,minuto_fim]
+Chaves_estrangeiras = [curso.nome_dept = departamento.nome_dept,instrutor.nome_dept = departamento.nome_dept,secao.predio = sala_de_aula.predio,secao.numero_sala = sala_de_aula.numero_sala,secao.id_curso = curso.id_curso,ensina.ID = instrutor.ID,ensina.id_curso = secao.id_curso,ensina.id_secao = secao.id_secao,ensina.semestre = secao.semestre,ensina.ano = secao.ano,estudante.nome_dept = departamento.nome_dept,cursa.ID = estudante.ID,cursa.id_curso = secao.id_curso,cursa.id_secao = secao.id_secao,cursa.semestre = secao.semestre,cursa.ano = secao.ano,orientador.s_ID = estudante.ID,orientador.i_ID = instrutor.ID,prereq.id_prereq = curso.id_curso,prereq.id_curso = curso.id_curso]
+P: "Dê o título do curso oferecido em Chandler durante o Outono de 2010."
+R: Vamos pensar passo a passo. Na pergunta "Dê o título do curso oferecido em Chandler durante o Outono de 2010.", nos é perguntado:
+"título do curso" então precisamos da coluna = [curso.titulo]
+"curso oferecido em Chandler" então precisamos da coluna = [SECAO.predio]
+"durante o Outono" então precisamos da coluna = [SECAO.semestre]
+"de 2010" então precisamos da coluna = [SECAO.ano]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [curso.id_curso = SECAO.id_curso].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [Chandler,Outono,2010]. Então os Schema_links são:
+Schema_links: [curso.titulo,curso.id_curso = SECAO.id_curso,SECAO.predio,SECAO.ano,SECAO.semestre,Chandler,Outono,2010]
+
+Tabela cidade, colunas = [*,ID_Cidade,Nome_Oficial,Status,Area_km_2,Populacao,Ranking_Censo]
+Tabela registro_competicao, colunas = [*,ID_Competicao,ID_Fazenda,Ranking]
+Tabela fazenda, colunas = [*,ID_Fazenda,Ano,Total_Cavalos,Cavalos_de_Trabalho,Total_Gado,Boise,Touros,Vacas,Porcos,Ovelhas_e_Cabras]
+Tabela competicao_fazenda, colunas = [*,ID_Competicao,Ano,Tema,ID_Cidade_Sede,Anfitrioes]
+Chaves_estrangeiras = [competicao_fazenda.ID_Cidade_Sede = cidade.ID_Cidade,registro_competicao.ID_Fazenda = fazenda.ID_Fazenda,registro_competicao.ID_Competicao = competicao_fazenda.ID_Competicao]
+P: "Mostre o status da cidade que sediou o maior número de competições."
+R: Vamos pensar passo a passo. Na pergunta "Mostre o status da cidade que sediou o maior número de competições.", nos é perguntado:
+"o status da cidade" então precisamos da coluna = [cidade.Status]
+"maior número de competições" então precisamos da coluna = [competicao_fazenda.*]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [competicao_fazenda.ID_Cidade_Sede = cidade.ID_Cidade].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = []. Então os Schema_links são:
+Schema_links: [cidade.Status,competicao_fazenda.ID_Cidade_Sede = cidade.ID_Cidade,competicao_fazenda.*]
+
+Tabela orientador, colunas = [*,s_ID,i_ID]
+Tabela sala_de_aula, colunas = [*,predio,numero_sala,capacidade]
+Tabela curso, colunas = [*,id_curso,titulo,nome_dept,creditos]
+Tabela departamento, colunas = [*,nome_dept,predio,orcamento]
+Tabela instrutor, colunas = [*,ID,nome,nome_dept,salario]
+Tabela prereq, colunas = [*,id_curso,id_prereq]
+Tabela secao, colunas = [*,id_curso,id_secao,semestre,ano,predio,numero_sala,id_intervalo_tempo]
+Tabela estudante, colunas = [*,ID,nome,nome_dept,total_cred]
+Tabela cursa, colunas = [*,ID,id_curso,id_secao,semestre,ano,nota]
+Tabela ensina, colunas = [*,ID,id_curso,id_secao,semestre,ano]
+Tabela intervalo_tempo, colunas = [*,id_intervalo_tempo,dia,hora_inicio,minuto_inicio,hora_fim,minuto_fim]
+Chaves_estrangeiras = [curso.nome_dept = departamento.nome_dept,instrutor.nome_dept = departamento.nome_dept,secao.predio = sala_de_aula.predio,secao.numero_sala = sala_de_aula.numero_sala,secao.id_curso = curso.id_curso,ensina.ID = instrutor.ID,ensina.id_curso = secao.id_curso,ensina.id_secao = secao.id_secao,ensina.semestre = secao.semestre,ensina.ano = secao.ano,estudante.nome_dept = departamento.nome_dept,cursa.ID = estudante.ID,cursa.id_curso = secao.id_curso,cursa.id_secao = secao.id_secao,cursa.semestre = secao.semestre,cursa.ano = secao.ano,orientador.s_ID = estudante.ID,orientador.i_ID = instrutor.ID,prereq.id_prereq = curso.id_curso,prereq.id_curso = curso.id_curso]
+P: "Encontre o ID dos instrutores que ministraram aula no Outono de 2009 mas não na Primavera de 2010."
+R: Vamos pensar passo a passo. Na pergunta "Encontre o ID dos instrutores que ministraram aula no Outono de 2009 mas não na Primavera de 2010.", nos é perguntado:
+"ID dos instrutores que ministraram" então precisamos da coluna = [ensina.id]
+"ministraram aula em" então precisamos das colunas = [ensina.semestre,ensina.ano]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [Outono,2009,Primavera,2010]. Então os Schema_links são:
+Schema_links: [ensina.id,ensina.semestre,ensina.ano,Outono,2009,Primavera,2010]
+
+Tabela Contas, colunas = [*,id_conta,id_cliente,data_abertura_conta,nome_conta,outros_detalhes_conta]
+Tabela Clientes, colunas = [*,id_cliente,primeiro_nome,inicial_meio_nome,ultimo_nome,genero,email,login,senha,telefone,cidade,estado,pais]
+Tabela Transacoes_Financeiras, colunas = [*,id_transacao,id_conta,numero_nota,tipo_transacao,data_transacao,valor_transacao,comentario_transacao,outros_detalhes_transacao]
+Tabela Itens_Nota_Fiscal, colunas = [*,id_item_pedido,numero_nota,id_produto,titulo_produto,quantidade_produto,preco_produto,custo_produto_calculado,imposto_pago_calculado,custo_total_calculado]
+Tabela Notas_Fiscais, colunas = [*,numero_nota,id_pedido,data_nota]
+Tabela Itens_Pedido, colunas = [*,id_item_pedido,id_pedido,id_produto,quantidade_produto,outros_detalhes_item]
+Tabela Pedidos, colunas = [*,id_pedido,id_cliente,data_pedido,detalhes_pedido]
+Tabela Categorias_Produto, colunas = [*,codigo_tipo_producao,descricao_tipo_produto,taxa_imposto]
+Tabela Produtos, colunas = [*,id_produto,id_produto_pai,codigo_tipo_producao,preco_unitario,nome_produto,cor_produto,tamanho_produto]
+Chaves_estrangeiras = [Pedidos.id_cliente = Clientes.id_cliente,Notas_Fiscais.id_pedido = Pedidos.id_pedido,Contas.id_cliente = Clientes.id_cliente,Produtos.codigo_tipo_producao = Categorias_Produto.codigo_tipo_producao,Transacoes_Financeiras.id_conta = Contas.id_conta,Transacoes_Financeiras.numero_nota = Notas_Fiscais.numero_nota,Itens_Pedido.id_pedido = Pedidos.id_pedido,Itens_Pedido.id_produto = Produtos.id_produto,Itens_Nota_Fiscal.id_produto = Produtos.id_produto,Itens_Nota_Fiscal.numero_nota = Notas_Fiscais.numero_nota,Itens_Nota_Fiscal.id_item_pedido = Itens_Pedido.id_item_pedido]
+P: "Mostre o ID, a data de abertura da conta, o nome da conta e outros detalhes da conta para todas as contas."
+R: Vamos pensar passo a passo. Na pergunta "Mostre o ID, a data de abertura da conta, o nome da conta e outros detalhes da conta para todas as contas.", nos é perguntado:
+"o ID, a data de abertura da conta, o nome da conta e outros detalhes da conta para todas as contas." então precisamos das colunas = [Contas.id_conta,Contas.nome_conta,Contas.outros_detalhes_conta,Contas.data_abertura_conta]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = []. Então os Links_do_Esquema são:
+Schema_links: [Contas.id_conta,Contas.nome_conta,Contas.outros_detalhes_conta,Contas.data_abertura_conta]
+
+Tabela cidade, colunas = [*,ID_Cidade,Nome_Oficial,Status,Area_km_2,Populacao,Ranking_Censo]
+Tabela registro_competicao, colunas = [*,ID_Competicao,ID_Fazenda,Ranking]
+Tabela fazenda, colunas = [*,ID_Fazenda,Ano,Total_Cavalos,Cavalos_de_Trabalho,Total_Gado,Boise,Touros,Vacas,Porcos,Ovelhas_e_Cabras]
+Tabela competicao_fazenda, colunas = [*,ID_Competicao,Ano,Tema,ID_Cidade_Sede,Anfitrioes]
+Chaves_estrangeiras = [competicao_fazenda.ID_Cidade_Sede = cidade.ID_Cidade,registro_competicao.ID_Fazenda = fazenda.ID_Fazenda,registro_competicao.ID_Competicao = competicao_fazenda.ID_Competicao]
+P: "Mostre o status compartilhado por cidades com população maior que 1500 e menor que 500."
+R: Vamos pensar passo a passo. Na pergunta "Mostre o status compartilhado por cidades com população maior que 1500 e menor que 500.", nos é perguntado:
+"o status compartilhado por cidades" então precisamos da coluna = [cidade.Status]
+"cidades com população" então precisamos da coluna = [cidade.Populacao]
+Baseado nas colunas e tabelas, precisamos destas Chaves_estrangeiras = [].
+Baseado nas tabelas, colunas e Chaves_estrangeiras, O conjunto de valores possíveis são = [1500,500]. Então os Links_do_Esquema são:
+Schema_links: [cidade.Status,cidade.Populacao,1500,500]'
+'''
+
+classification_prompt = '''P: "Liste os nomes dos clientes que gastaram mais que a média de gastos em 2024."
+schema_links: [cliente.nome,cliente.id,pedido.id_cliente,pedido.valor_total,pedido.data_pedido,2024]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Liste os nomes dos clientes que gastaram mais que a média de gastos em 2024." precisa destas tabelas = [cliente, pedido], então precisamos de JOIN.
+Além disso, requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = ["Qual é o gasto médio dos clientes em 2024"].
+Portanto, precisamos de JOIN e precisamos de subconsultas, então a consulta SQL pode ser classificada como "ANINHADA".
+Classificação: "ANINHADA"
+
+P: "Encontre os prédios que possuem salas com capacidade superior a 50."
+schema_links: [sala_de_aula.predio,sala_de_aula.capacidade,50]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Encontre os prédios que possuem salas com capacidade superior a 50." precisa destas tabelas = [sala_de_aula], então não precisamos de JOIN.
+Além disso, não requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = [""].
+Portanto, não precisamos de JOIN e não precisamos de subconsultas, então a consulta SQL pode ser classificada como "FÁCIL".
+Classificação: "FÁCIL"
+
+P: "Quais são os nomes de todos os instrutores que orientam alunos no departamento de matemática ordenados pelos créditos totais do aluno."
+schema_links: [orientador.id_instrutor = instrutor.id,orientador.id_aluno = aluno.id,instrutor.nome,aluno.nome_dept,aluno.total_cred,matematica]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Quais são os nomes de todos os instrutores que orientam alunos no departamento de matemática ordenados pelos créditos totais do aluno." precisa destas tabelas = [orientador,instrutor,aluno], então precisamos de JOIN.
+Além disso, não precisa de subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = [""].
+Portanto, precisamos de JOIN e não precisamos de subconsultas, então a consulta SQL pode ser classificada como "NÃO-ANINHADA".
+Classificação: "NÃO-ANINHADA"
+
+P: "Encontre o número das salas que podem acomodar de 50 a 100 alunos e seus prédios."
+schema_links: [sala_de_aula.predio,sala_de_aula.numero_sala,sala_de_aula.capacidade,50,100]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Encontre o número das salas que podem acomodar de 50 a 100 alunos e seus prédios." precisa destas tabelas = [sala_de_aula], então não precisamos de JOIN.
+Além disso, não requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = [""].
+Portanto, não precisamos de JOIN e não precisamos de subconsultas, então a consulta SQL pode ser classificada como "FÁCIL".
+Classificação: "FÁCIL"
+
+P: "Mostre o nome de cada funcionário e o total de horas que ele trabalhou no mês de março de 2025."
+schema_links: [funcionario.id,funcionario.nome,registro_ponto.id_funcionario,registro_ponto.entrada, registro_ponto.saida,registro_ponto.data,3,2025]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Mostre o nome de cada funcionário e o total de horas que ele trabalhou no mês de março de 2025." precisa destas tabelas = [funcionario, registro_ponto], então precisamos de JOIN.
+Além disso, não precisa de subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = [""].
+Portanto, precisamos de JOIN e não precisamos de subconsultas, então a consulta SQL pode ser classificada como "NÃO-ANINHADA".
+Classificação: "NÃO-ANINHADA"
+
+P: "Quantos cursos não têm pré-requisito?"
+schema_links: [curso.*,curso.id_curso = prereq.id_curso]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Quantos cursos não têm pré-requisito?" precisa destas tabelas = [curso,prereq], então precisamos de JOIN.
+Além disso, requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = ["Quais cursos têm pré-requisito?"].
+Portanto, precisamos de JOIN e precisamos de subconsultas, então a consulta SQL pode ser classificada como "ANINHADA".
+Classificação: "ANINHADA"
+
+P: "Encontre o título do curso oferecido tanto pelo departamento de Estatística como de Psicologia."
+schema_links: [curso.titulo,curso.nome_dept,Estatistica,Psicologia]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Encontre o título do curso oferecido tanto pelo departamento de Estatística como de Psicologia." precisa destas tabelas = [curso], então não precisamos de JOIN.
+Além disso, requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = ["Encontre os títulos dos cursos oferecidos pelo departamento de Psicologia"].
+Portanto, não precisamos de JOIN e precisamos de subconsultas, então a consulta SQL pode ser classificada como "ANINHADA".
+Classificação: "ANINHADA"
+
+P: "Encontre o ID dos instrutores que deram aula no Outono de 2009 mas não na Primavera de 2010."
+schema_links: [ministra.id,ministra.semestre,ministra.ano,Outono,2009,Primavera,2010]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Encontre o ID dos instrutores que deram aula no Outono de 2009 mas não na Primavera de 2010." precisa destas tabelas = [ministra], então não precisamos de JOIN.
+Além disso, requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = ["Encontre o ID dos instrutores que ministraram aula na Primavera de 2010"].
+Portanto, não precisamos de JOIN e precisamos de subconsultas, então a consulta SQL pode ser classificada como "ANINHADA".
+Classificação: "ANINHADA"
+
+P: "Encontre o nome do departamento que oferece o maior número total de créditos"
+schema_links: [curso.nome_dept,curso.creditos]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Encontre o nome do departamento que oferece o maior número total de créditos" precisa destas tabelas = [curso], então não precisamos de JOIN.
+Além disso, não requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = [""].
+Portanto, não precisamos de JOIN e não precisamos de subconsultas, então a consulta SQL pode ser classificada como "FÁCIL".
+Classificação: "FÁCIL"
+
+P: "Qual é o nome do instrutor que orienta o aluno com o maior número de créditos totais?"
+schema_links: [orientador.id_instrutor = instrutor.id,orientador.id_aluno = aluno.id,instrutor.nome,aluno.total_cred]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Qual é o nome do instrutor que orienta o aluno com o maior número de créditos totais?" precisa destas tabelas = [orientador,instrutor,aluno], então precisamos de JOIN.
+Além disso, não precisa de subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = [""].
+Portanto, precisamos de JOIN e não precisamos de subconsultas, então a consulta SQL pode ser classificada como "NÃO-ANINHADA".
+Classificação: "NÃO-ANINHADA"
+
+P: "Encontre o número total de alunos e número total de instrutores para cada departamento."
+schema_links = [departamento.nome_dept = instrutor.nome_dept,aluno.id,aluno.nome_dept = departamento.nome_dept,instrutor.id]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Encontre o número total de alunos e número total de instrutores para cada departamento." precisa destas tabelas = [departamento,instrutor,aluno], então precisamos de JOIN.
+Além disso, não precisa de subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = [""].
+Portanto, precisamos de JOIN e não precisamos de subconsultas, então a consulta SQL pode ser classificada como "NÃO-ANINHADA".
+Classificação: "NÃO-ANINHADA"
+
+P: "Dê o nome e prédio dos departamentos com orçamento maior que a média."
+schema_links: [departamento.orcamento,departamento.nome_dept,departamento.predio]
+R: Vamos pensar passo a passo. A consulta SQL para a pergunta "Dê o nome e prédio dos departamentos com orçamento maior que a média." precisa destas tabelas = [departamento], então não precisamos de JOIN.
+Além disso, requer subconsultas com (INTERSECT, UNION, EXCEPT, IN, NOT IN), e precisamos responder às perguntas = ["Qual é o orçamento médio dos departamentos"].
+Portanto, não precisamos de JOIN e precisamos de subconsultas, então a consulta SQL pode ser classificada como "ANINHADA".
+Classificação: "ANINHADA"
+'''
+
+easy_prompt = '''P: "Liste os nomes dos alunos que têm mais de 100 créditos e pertencem ao departamento de Física."  
+Schema_links: [aluno.nome,aluno.total_cred,aluno.dept,100,5]  
+SQL: SELECT nome FROM aluno WHERE total_cred > 100 AND dept = 5
+
+P: "Quantos funcionários do setor de Tecnologia usavam Windows em 2022?"  
+Schema_links: [funcionario.*,funcionario.setor,4,funcionario.sistema,1,funcionario.ano,2022]  
+SQL: SELECT count(*) FROM funcionario WHERE setor = 4 AND sistema = 1 AND ano = 2022
+
+P: "Havia quantos instrutores do departamento de Geografia aposentados em 2020?"  
+Schema_links: [instrutor.*,instrutor.dept,2,instrutor.status,3,instrutor.ano, 2020]  
+SQL: SELECT count(*) FROM instrutor WHERE dept = 2 AND status = 3 AND ano = 2020 
+
+P: "Dê o nome do aluno do departamento de História com mais créditos."
+Schema_links: [aluno.nome,aluno.nome_dept,aluno.total_cred,História]
+SQL: SELECT nome FROM aluno WHERE nome_dept = 'História' ORDER BY total_cred DESC LIMIT 1
+
+P: "Liste os 3 maiores estados com áreas protegidas classificadas como ‘Reserva Natural’ em 2012."  
+Schema_links: [area_protegida.estado,area_protegida.area_km2,area_protegida.tipo,Reserva Natural,area_protegida.ano,2012]  
+SQL: SELECT DISTINCT estado FROM area_protegida WHERE tipo = 'Reserva Natural' AND ano = 2012 ORDER BY area_km2 DESC LIMIT 3
+
+P: "Encontre os prédios que possuem salas com capacidade superior a 50."
+Schema_links: [sala_de_aula.predio,sala_de_aula.capacidade,50]
+SQL: SELECT DISTINCT predio FROM sala_de_aula WHERE capacidade > 50
+
+P: "Encontre o número das salas que podem acomodar de 50 a 100 alunos e seus prédios."
+Schema_links: [sala_de_aula.predio,sala_de_aula.numero_sala,sala_de_aula.capacidade,50,100]
+SQL: SELECT predio, numero_sala FROM sala_de_aula WHERE capacidade BETWEEN 50 AND 100
+
+P: "Encontre o orçamento total dos departamentos de Marketing ou Finanças."
+Schema_links: [departamento.orcamento,departamento.nome_dept,Marketing,Finanças]
+SQL: SELECT sum(orcamento), nome_dept FROM departamento WHERE nome_dept = 'Marketing' OR nome_dept = 'Finanças'
+
+P: "Encontre o nome do departamento do instrutor cujo nome contém 'Soisalon'."
+Schema_links: [instrutor.nome_dept,instrutor.nome,Soisalon]
+SQL: SELECT nome_dept FROM instrutor WHERE nome LIKE '%Soisalon%'
+
+P: "Quantos instrutores ministram curso na primavera de 2010?"
+Schema_links: [ministra.ID,ministra.semestre,ministra.ano,primavera,2010]
+SQL: SELECT COUNT(DISTINCT ID) FROM ministra WHERE semestre = 'primavera' AND ano = 2010
+
+P: "Encontre o nome dos alunos e seus departamentos ordenados por créditos totais em ordem crescente."
+Schema_links: [aluno.nome,aluno.nome_dept,aluno.total_cred]
+SQL: SELECT nome, nome_dept FROM aluno ORDER BY total_cred
+
+P: "Encontre o ano que oferece o maior número de cursos."
+Schema_links: [secao.ano,secao.*]
+SQL: SELECT ano FROM secao GROUP BY ano ORDER BY count(*) DESC LIMIT 1
+
+P: "Quais são os nomes e salários médios dos departamentos com salário médio acima de 42000?"
+Schema_links: [instrutor.nome_dept,instrutor.salario,42000]
+SQL: SELECT nome_dept, AVG(salario) FROM instrutor GROUP BY nome_dept HAVING AVG(salario) > 42000
+
+P: "Quantas salas em cada prédio têm capacidade acima de 50?"
+Schema_links: [sala_de_aula.*,sala_de_aula.predio,sala_de_aula.capacidade,50]
+SQL: SELECT count(*), predio FROM sala_de_aula WHERE capacidade > 50 GROUP BY predio
+
+P: "Encontre os nomes dos 3 departamentos que oferecem a maior quantidade de cursos."
+Schema_links: [curso.nome_dept,curso.*]
+SQL: SELECT nome_dept FROM curso GROUP BY nome_dept ORDER BY count(*) DESC LIMIT 3
+
+P: "Encontre a capacidade máxima e média das salas em cada prédio."
+Schema_links: [sala_de_aula.predio,sala_de_aula.capacidade]
+SQL: SELECT max(capacidade), avg(capacidade), predio FROM sala_de_aula GROUP BY predio
+
+P: "Encontre o título do curso que é oferecido por mais de um departamento."
+Schema_links: [curso.titulo]
+SQL: SELECT titulo FROM curso GROUP BY titulo HAVING count(*) > 1
+'''
+
+medium_prompt = '''P: "Encontre o nome e prédio do departamento com o maior orçamento."
+Schema_links: [departamento.orcamento,departamento.nome_dept,departamento.predio]
+R: Vamos pensar passo a passo. Para criar o SQL para a pergunta dada, precisamos unir estas tabelas = []. Primeiro, crie uma representação intermediária, depois use-a para construir a consulta SQL.
+Representacao_intermediaria: select departamento.nome_dept, departamento.predio from departamento order by departamento.orcamento desc limit 1
+SQL: SELECT nome_dept, predio FROM departamento ORDER BY orcamento DESC LIMIT 1
+
+P: "Qual é o nome e prédio dos departamentos cujo orçamento é maior que a média de orçamento?"
+Schema_links: [departamento.orcamento,departamento.nome_dept,departamento.predio]
+R: Vamos pensar passo a passo. Para criar o SQL para a pergunta dada, precisamos unir estas tabelas = []. Primeiro, crie uma representação intermediária, depois use-a para construir a consulta SQL.
+Representacao_intermediaria: select departamento.nome_dept, departamento.predio from departamento where @.@ > avg(departamento.orcamento)
+SQL: SELECT nome_dept, predio FROM departamento WHERE orcamento > (SELECT avg(orcamento) FROM departamento)
+
+P: "Encontre o número total de alunos e número total de instrutores para cada departamento."
+Schema_links: [departamento.nome_dept = aluno.nome_dept,aluno.id,departamento.nome_dept = instrutor.nome_dept,instrutor.id]
+R: Vamos pensar passo a passo. Para criar o SQL para a pergunta dada, precisamos unir estas tabelas = [departamento,aluno,instrutor]. Primeiro, crie uma representação intermediária, depois use-a para construir a consulta SQL.
+Representacao_intermediaria: select count(distinct aluno.id), count(distinct instrutor.id), departamento.nome_dept from departamento group by instrutor.nome_dept
+SQL: SELECT count(DISTINCT T2.id), count(DISTINCT T3.id), T3.nome_dept FROM departamento AS T1 JOIN aluno AS T2 ON T1.nome_dept = T2.nome_dept JOIN instrutor AS T3 ON T1.nome_dept = T3.nome_dept GROUP BY T3.nome_dept
+
+P: "Encontre o nome dos alunos que cursaram alguma disciplina nos anos de 2009 e 2010."
+Schema_links: [aluno.nome,aluno.id = cursa.id,cursa.ano,2009,2010]
+R: Vamos pensar passo a passo. Para criar o SQL para a pergunta dada, precisamos unir estas tabelas = [aluno,cursa]. Primeiro, crie uma representação intermediária, depois use-a para construir a consulta SQL.
+Representacao_intermediaria: select distinct aluno.nome from aluno where cursa.ano = 2009 or cursa.ano = 2010
+SQL: SELECT DISTINCT T1.nome FROM aluno AS T1 JOIN cursa AS T2 ON T1.id = T2.id WHERE T2.ano = 2009 OR T2.ano = 2010
+
+P: "Liste em ordem alfabética todos os nomes de cursos e os nomes de seus instrutores no ano de 2008."
+Schema_links: [curso.titulo,curso.id_curso = ministra.id_curso,ministra.id = instrutor.id,instrutor.nome,ministra.ano,2008]
+R: Vamos pensar passo a passo. Para criar o SQL para a pergunta dada, precisamos unir estas tabelas = [curso,ministra,instrutor]. Primeiro, crie uma representação intermediária, depois use-a para construir a consulta SQL.
+Representacao_intermediaria: select curso.titulo, instrutor.nome from curso where ministra.ano = 2008 order by curso.titulo asc
+SQL: SELECT T1.titulo, T3.nome FROM curso AS T1 JOIN ministra AS T2 ON T1.id_curso = T2.id_curso JOIN instrutor AS T3 ON T2.id = T3.id WHERE T2.ano = 2008 ORDER BY T1.titulo
+'''
+
+hard_prompt = '''P: "Encontre o título dos cursos que possuem dois pré-requisitos"
+Schema_links: [curso.titulo,curso.id_curso = prereq.id_curso]
+R: Vamos pensar passo a passo. "Encontre o título dos cursos que possuem dois pré-requisitos" pode ser resolvido sabendo a resposta para a sub-pergunta "Quais são os títulos dos cursos com dois pré-requisitos?".
+A consulta SQL para a sub-pergunta "Quais são os títulos dos cursos com dois pré-requisitos?" é SELECT T1.titulo FROM curso AS T1 JOIN prereq AS T2 ON T1.id_curso = T2.id_curso GROUP BY T2.id_curso HAVING count(*) = 2
+Então, a resposta para a pergunta "Encontre o título dos cursos que possuem dois pré-requisitos?" é =
+Representacao_intermediaria: select curso.titulo from curso where count(prereq.*) = 2 group by prereq.id_curso
+SQL: SELECT T1.titulo FROM curso AS T1 JOIN prereq AS T2 ON T1.id_curso = T2.id_curso GROUP BY T2.id_curso HAVING count(*) = 2
+
+P: "Encontre o nome e prédio do departamento com o maior orçamento."
+Schema_links: [departamento.nome_dept,departamento.predio,departamento.orcamento]
+R: Vamos pensar passo a passo. "Encontre o nome e prédio do departamento com o maior orçamento." pode ser resolvido sabendo a resposta para a sub-pergunta "Qual é o nome e prédio do departamento com o maior orçamento?".
+A consulta SQL para a sub-pergunta "Qual é o nome e prédio do departamento com o maior orçamento?" é SELECT nome_dept, predio FROM departamento ORDER BY orcamento DESC LIMIT 1
+Então, a resposta para a pergunta "Encontre o nome e prédio do departamento com o maior orçamento." é =
+Representacao_intermediaria: select departamento.nome_dept, departamento.predio from departamento order by departamento.orcamento desc limit 1
+SQL: SELECT nome_dept, predio FROM departamento ORDER BY orcamento DESC LIMIT 1
+
+P: "Encontre o título, créditos e nome do departamento dos cursos que possuem mais de um pré-requisito"
+Schema_links: [curso.titulo,curso.creditos,curso.nome_dept,curso.id_curso = prereq.id_curso]
+R: Vamos pensar passo a passo. "Encontre o título, créditos e nome do departamento dos cursos que possuem mais de um pré-requisito" pode ser resolvido sabendo a resposta para a sub-pergunta "Quais são os títulos, créditos e nomes de departamento para cursos com mais de um pré-requisito?".
+A consulta SQL para a sub-pergunta "Quais são os títulos, créditos e nomes de departamento para cursos com mais de um pré-requisito?" é SELECT T1.titulo, T1.creditos, T1.nome_dept FROM curso AS T1 JOIN prereq AS T2 ON T1.id_curso = T2.id_curso GROUP BY T2.id_curso HAVING count(*) > 1
+Então, a resposta para a pergunta "Encontre o título, créditos e nome do departamento dos cursos que possuem mais de um pré-requisito" é =
+Representacao_intermediaria: select curso.titulo, curso.creditos, curso.nome_dept from curso where count(prereq.*) > 1 group by prereq.id_curso
+SQL: SELECT T1.titulo, T1.creditos, T1.nome_dept FROM curso AS T1 JOIN prereq AS T2 ON T1.id_curso = T2.id_curso GROUP BY T2.id_curso HAVING count(*) > 1
+
+P: "Dê o nome e prédio dos departamentos com orçamento maior que a média."
+Schema_links: [departamento.nome_dept,departamento.predio,departamento.orcamento]
+R: Vamos pensar passo a passo. "Dê o nome e prédio dos departamentos com orçamento maior que a média." pode ser resolvido sabendo a resposta para a sub-pergunta "Qual é o orçamento médio dos departamentos?".
+A consulta SQL para a sub-pergunta "Qual é o orçamento médio dos departamentos?" é SELECT avg(orcamento) FROM departamento
+Então, a resposta para a pergunta "Dê o nome e prédio dos departamentos com orçamento maior que a média." é =
+Representacao_intermediaria: select departamento.nome_dept, departamento.predio from departamento where @.@ > avg(departamento.orcamento)
+SQL: SELECT nome_dept, predio FROM departamento WHERE orcamento > (SELECT avg(orcamento) FROM departamento)
+
+P: "Encontre o ID dos instrutores que ministraram aula no Outono de 2009 mas não na Primavera de 2010."
+Schema_links: [ministra.id,ministra.semestre,ministra.ano,Outono,2009,Primavera,2010]
+R: Vamos pensar passo a passo. "Encontre o ID dos instrutores que ministraram aula no Outono de 2009 mas não na Primavera de 2010." pode ser resolvido sabendo a resposta para a sub-pergunta "Encontre o ID dos instrutores que ministraram aula na Primavera de 2010".
+A consulta SQL para a sub-pergunta "Encontre o ID dos instrutores que ministraram aula na Primavera de 2010" é SELECT id FROM ministra WHERE semestre = 'Primavera' AND ano = 2010
+Então, a resposta para a pergunta "Encontre o ID dos instrutores que ministraram aula no Outono de 2009 mas não na Primavera de 2010." é =
+Representacao_intermediaria: select ministra.id from ministra where ministra.semestre = \"Outono\" and ministra.ano = 2009 and ministra.semestre != \"Primavera\" and ministra.ano = 2010
+SQL: SELECT id FROM ministra WHERE semestre = 'Outono' AND ano = 2009 EXCEPT SELECT id FROM ministra WHERE semestre = 'Primavera' AND ano = 2010
+
+P: "Encontre o nome dos cursos que não possuem nenhum pré-requisito"
+Schema_links: [curso.titulo,curso.id_curso]
+R: Vamos pensar passo a passo. "Encontre o nome dos cursos que não possuem nenhum pré-requisito" pode ser resolvido sabendo a resposta para a sub-pergunta "Quais são os cursos que possuem algum pré-requisito?".
+A consulta SQL para a sub-pergunta "Quais são os cursos que possuem algum pré-requisito?" é SELECT id_curso FROM prereq
+Então, a resposta para a pergunta "Encontre o nome dos cursos que não possuem nenhum pré-requisito" é =
+Representacao_intermediaria: select curso.titulo from curso where @.@ not in prereq.id_curso
+SQL: SELECT titulo FROM curso WHERE id_curso NOT IN (SELECT id_curso FROM prereq)
+
+P: "Encontre os salários distintos de instrutores que são menores que o maior salário."
+Schema_links: [instrutor.salario]
+R: Vamos pensar passo a passo. "Encontre os salários distintos de instrutores que são menores que o maior salário." pode ser resolvido sabendo a resposta para a sub-pergunta "Qual é o maior salário dos instrutores".
+A consulta SQL para a sub-pergunta "Qual é o maior salário dos instrutores" é SELECT max(salario) FROM instrutor
+Então, a resposta para a pergunta "Encontre os salários distintos de instrutores que são menores que o maior salário." é =
+Representacao_intermediaria: select distinct instrutor.salario from instrutor where @.@ < max(instrutor.salario)
+SQL: SELECT DISTINCT salario FROM instrutor WHERE salario < (SELECT max(salario) FROM instrutor)
+
+P: "Encontre os nomes dos alunos que cursaram alguma disciplina no semestre de outono de 2003."
+Schema_links: [aluno.id,aluno.nome,cursa.id,cursa.semestre,outono,2003]
+R: Vamos pensar passo a passo. "Encontre os nomes dos alunos que cursaram alguma disciplina no semestre de outono de 2003." pode ser resolvido sabendo a resposta para a sub-pergunta "Encontre os alunos que cursaram alguma disciplina no semestre de outono de 2003.".
+A consulta SQL para a sub-pergunta "Encontre os alunos que cursaram alguma disciplina no semestre de outono de 2003." é SELECT id FROM cursa WHERE semestre = 'Outono' AND ano = 2003
+Então, a resposta para a pergunta "Encontre os nomes dos alunos que cursaram alguma disciplina no semestre de outono de 2003." é =
+Representacao_intermediaria: select aluno.nome from aluno where cursa.semestre = "Outono" and cursa.ano = 2003
+SQL: SELECT nome FROM aluno WHERE id IN (SELECT id FROM cursa WHERE semestre = 'Outono' AND ano = 2003)
+
+P: "Encontre o salário mínimo para os departamentos cujo salário médio é acima do salário médio de todos os instrutores."
+Schema_links: [instrutor.salario,instrutor.nome_dept]
+R: Vamos pensar passo a passo. "Encontre o salário mínimo para os departamentos cujo salário médio é acima do salário médio de todos os instrutores." pode ser resolvido sabendo a resposta para a sub-pergunta "Qual é o salário médio de todos os instrutores?".
+A consulta SQL para a sub-pergunta "Qual é o salário médio de todos os instrutores?" é SELECT avg(salario) FROM instrutor
+Então, a resposta para a pergunta "Encontre o salário mínimo para os departamentos cujo salário médio é acima do salário médio de todos os instrutores." é =
+Representacao_intermediaria: select min(instrutor.salario), instrutor.nome_dept from instrutor where avg(instrutor.salario) > avg(instrutor.salario) group by instrutor.nome_dept
+SQL: SELECT min(salario), nome_dept FROM instrutor GROUP BY nome_dept HAVING avg(salario) > (SELECT avg(salario) FROM instrutor)
+
+P: "Qual é o título do curso que é pré-requisito do curso Computação Móvel?"
+Schema_links: [curso.titulo,curso.id_curso = prereq.id_curso,prereq.id_prereq,curso.titulo,Computação Móvel]
+R: Vamos pensar passo a passo. "Qual é o título do curso que é pré-requisito do curso Computação Móvel?" pode ser resolvido sabendo a resposta para a sub-pergunta "Quais são os IDs dos pré-requisitos do curso Computação Móvel?".
+A consulta SQL para a sub-pergunta "Quais são os IDs dos pré-requisitos do curso Computação Móvel?" é SELECT T1.id_prereq FROM prereq AS T1 JOIN curso AS T2 ON T1.id_curso = T2.id_curso WHERE T2.titulo = 'Computação Móvel'
+Então, a resposta para a pergunta "Qual é o título do curso que é pré-requisito do curso Computação Móvel?" é =
+Representacao_intermediaria: select curso.titulo from curso where @.@ in prereq.* and curso.titulo = "Computação Móvel"
+SQL: SELECT titulo FROM curso WHERE id_curso IN (SELECT T1.id_prereq FROM prereq AS T1 JOIN curso AS T2 ON T1.id_curso = T2.id_curso WHERE T2.titulo = 'Computação Móvel')
+
+P: "Dê o título e créditos do curso que é ministrado na sala com maior capacidade."
+Schema_links: [sala_de_aula.capacidade,sala_de_aula.predio = secao.predio,sala_de_aula.numero_sala = secao.numero_sala,curso.titulo,curso.creditos,curso.id_curso = secao.id_curso]
+R: Vamos pensar passo a passo. "Dê o título e créditos do curso que é ministrado na sala com maior capacidade." pode ser resolvido sabendo a resposta para a sub-pergunta "Qual é a capacidade da maior sala?".
+A consulta SQL para a sub-pergunta "Qual é a capacidade da maior sala?" é (SELECT max(capacidade) FROM sala_de_aula)
+Então, a resposta para a pergunta "Dê o título e créditos do curso que é ministrado na sala com maior capacidade." é =
+Representacao_intermediaria: select curso.titulo, curso.creditos from sala_de_aula order by sala_de_aula.capacidade desc limit 1"
+SQL: SELECT T3.titulo, T3.creditos FROM sala_de_aula AS T1 JOIN secao AS T2 ON T1.predio = T2.predio AND T1.numero_sala = T2.numero_sala JOIN curso AS T3 ON T2.id_curso = T3.id_curso WHERE T1.capacidade = (SELECT max(capacidade) FROM sala_de_aula)
+'''
