@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Quais disciplinas são mais comuns nas turmas de ensino médio profissionalizante em escolas urbanas no último ano disponível?",
+    "sql": "SELECT \n    SUM(disciplina_lingua_portuguesa) AS disciplina_lingua_portuguesa,\n    SUM(disciplina_educacao_fisica) AS disciplina_educacao_fisica,\n    SUM(disciplina_artes) AS disciplina_artes,\n    SUM(disciplina_lingua_ingles) AS disciplina_lingua_ingles,\n    SUM(disciplina_lingua_espanhol) AS disciplina_lingua_espanhol,\n    SUM(disciplina_lingua_frances) AS disciplina_lingua_frances,\n    SUM(disciplina_lingua_outra) AS disciplina_lingua_outra,\n    SUM(disciplina_libras) AS disciplina_libras,\n    SUM(disciplina_lingua_indigena) AS disciplina_lingua_indigena,\n    SUM(disciplina_matematica) AS disciplina_matematica,\n    SUM(disciplina_ciencias) AS disciplina_ciencias,\n    SUM(disciplina_fisica) AS disciplina_fisica,\n    SUM(disciplina_quimica) AS disciplina_quimica,\n    SUM(disciplina_biologia) AS disciplina_biologia,\n    SUM(disciplina_historia) AS disciplina_historia,\n    SUM(disciplina_geografia) AS disciplina_geografia,\n    SUM(disciplina_sociologia) AS disciplina_sociologia,\n    SUM(disciplina_filosofia) AS disciplina_filosofia,\n    SUM(disciplina_estudos_sociais) AS disciplina_estudos_sociais,\n    SUM(disciplina_informatica_comp) AS disciplina_informatica_comp,\n    SUM(disciplina_ensino_religioso) AS disciplina_ensino_religioso,\n    SUM(disciplina_pedagogicas) AS disciplina_pedagogicas,\n    SUM(disciplina_atendimento_especiais) AS disciplina_atendimento_especiais,\n    SUM(disciplina_diver_socio_cultural) AS disciplina_diver_socio_cultural\nFROM turma\nWHERE \n    etapa_ensino IN ('25', '26', '27', '28', '29') AND\n    disciplina_profissionalizante = 1 AND\n    tipo_localizacao = '1' AND\n    ano = (SELECT MAX(ano) FROM turma)"
+  },
+  {
+    "question": "Qual foi a média de idade dos docentes por estado ao longo dos últimos 5 anos de registro?",
+    "sql": "SELECT\n    sigla_uf,\n    ano,\n    AVG(idade) AS media_idade\nFROM docente\nWHERE ano >= (SELECT MAX(ano) FROM docente) - 4\nGROUP BY sigla_uf, ano\nORDER BY sigla_uf, ano"
+  },
+  {
+    "question": "Qual é o total de alunos que frequentam o ensino médio nas escolas públicas urbanas da Região Sul nos últimos 15 anos?",
+    "sql": "SELECT \n    ano,\n    SUM(quantidade_matricula_medio) AS quantidade_matricula_medio\nFROM \n    escola \nWHERE \n    rede != '4' AND\n    tipo_localizacao = '1' AND\n    sigla_uf IN ('RS', 'SC', 'PR') AND\n    ano >= (SELECT MAX(ano) - 14 FROM escola)\nGROUP BY ano\nORDER BY ano ASC"
+  },
+  {
+    "question": "Qual o número de matrículas por sexo em escolas rurais nos últimos 3 anos?",
+    "sql": "SELECT \n    e.ano,\n    SUM(e.quantidade_matricula_feminino) AS total_feminino,\n    SUM(e.quantidade_matricula_masculino) AS total_masculino,\n    SUM(e.quantidade_matricula_nao_declarada) AS total_nao_declarado\nFROM escola e\nWHERE e.tipo_localizacao = '2'\n  AND e.ano >= (SELECT MAX(ano) FROM escola) - 2\nGROUP BY e.ano\nORDER BY e.ano"
+  },
+  {
+    "question": "Mostre a quantidade de matriculas de EJA (Educação de Jovens e Adultos) por estado nos últimos 10 anos.",
+    "sql": "SELECT \n    sigla_uf,\n    ano,\n    SUM(quantidade_matricula_eja) AS total_eja\nFROM escola\nWHERE ano >= (SELECT MAX(ano) FROM escola) - 9\nGROUP BY sigla_uf, ano\nORDER BY sigla_uf, ano"
+  },
+  {
+    "question": "Houve aumento no número de professores das redes públicas com grau de escolaridade de mestre se compararmos o ano atual e o anterior?",
+    "sql": "SELECT\n    ano,\n    COUNT(DISTINCT id_docente) AS total_mestres\nFROM docente\nWHERE rede IN ('1', '2', '3')\n  AND mestrado = 1\n  AND ano >= (SELECT MAX(ano) FROM docente) - 1\nGROUP BY ano\nORDER BY ano"
+  },
+  {
+    "question": "Quais as 10 escolas que apresentaram o maior crescimento percentual de matrículas em um único ano nos últimos 10 anos?",
+    "sql": "WITH matriculas_escola AS (\n    SELECT \n        id_escola,\n        ano,\n        SUM(quantidade_matricula_educacao_basica) AS total_matriculas\n    FROM escola\n    WHERE ano >= (SELECT MAX(ano) FROM escola) - 9\n    GROUP BY id_escola, ano\n),\ncrescimento AS (\n    SELECT \n        m1.id_escola,\n        m1.ano AS ano_atual,\n        m1.total_matriculas AS mat_atual,\n        m2.total_matriculas AS mat_anterior,\n        (m1.total_matriculas - m2.total_matriculas) / NULLIF(m2.total_matriculas, 0) * 100 AS perc_crescimento\n    FROM matriculas_escola m1\n    JOIN matriculas_escola m2 ON m1.id_escola = m2.id_escola AND m1.ano = m2.ano + 1\n)\nSELECT \n    id_escola,\n    ano_atual,\n    perc_crescimento\nFROM crescimento\nORDER BY perc_crescimento DESC\nLIMIT 10"
+  },
+  {
+    "question": "Qual o total de escolas fechadas no último ano?",
+    "sql": "WITH ultimo_ano AS (\n    SELECT MAX(ano) AS ano_max FROM escola\n),\nescolas_atual AS (\n    SELECT DISTINCT id_escola FROM escola WHERE ano = (SELECT ano_max FROM ultimo_ano)\n),\nescolas_anterior AS (\n    SELECT DISTINCT id_escola FROM escola WHERE ano = (SELECT ano_max FROM ultimo_ano) - 1\n)\nSELECT \n    COUNT(*) AS total_escolas_fechadas\nFROM escolas_anterior\nWHERE id_escola NOT IN (SELECT id_escola FROM escolas_atual)"
+  },
+  {
+    "question": "Qual o total de alunos por raça matriculados nas redes de ensino infantil em 2007?",
+    "sql": "SELECT \n    SUM(quantidade_matricula_branca) AS quantidade_matricula_branca,\n    SUM(quantidade_matricula_preta) AS quantidade_matricula_preta,\n    SUM(quantidade_matricula_parda) AS quantidade_matricula_parda,\n    SUM(quantidade_matricula_amarela) AS quantidade_matricula_amarela,\n    SUM(quantidade_matricula_indigena) AS quantidade_matricula_indigena,\n    SUM(quantidade_matricula_nao_declarada) AS quantidade_matricula_nao_declarada\nFROM escola\nWHERE ano = 2007\n  AND quantidade_matricula_infantil > 0"
+  },
+  {
+    "question": "Qual o número total de escolas por região no ano de 2019?",
+    "sql": "SELECT\n    CASE \n        WHEN sigla_uf IN ('AC','AP','AM','PA','RO','RR','TO') THEN 'Norte'\n        WHEN sigla_uf IN ('AL','BA','CE','MA','PB','PE','PI','RN','SE') THEN 'Nordeste'\n        WHEN sigla_uf IN ('DF','GO','MT','MS') THEN 'Centro-Oeste'\n        WHEN sigla_uf IN ('ES','MG','RJ','SP') THEN 'Sudeste'\n        WHEN sigla_uf IN ('PR','SC','RS') THEN 'Sul'\n    END AS regiao,\n    COUNT(DISTINCT id_escola) AS total_escolas\nFROM escola\nWHERE ano = 2019\nGROUP BY regiao\nORDER BY regiao"
+  }
+]
