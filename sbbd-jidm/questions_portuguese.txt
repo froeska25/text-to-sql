@@ -1,10 +1,19 @@
 P1: Quais disciplinas são mais comuns nas turmas de ensino médio profissionalizante em escolas urbanas no último ano disponível?
+
 P2: Qual foi a média de idade dos docentes por estado ao longo dos últimos 5 anos de registro?
+
 P3: Qual é o total de alunos que frequentam o ensino médio nas escolas públicas urbanas da Região Sul nos últimos 15 anos?
+
 P4: Qual o número de matrículas por sexo em escolas rurais nos últimos 3 anos?
+
 P5: Mostre a quantidade de matrículas de EJA (Educação de Jovens e Adultos) por estado nos últimos 10 anos.
+
 P6: Houve aumento no número de professores das redes públicas com grau de escolaridade de mestre se compararmos o ano atual e o anterior?
+
 P7: Quais as 10 escolas que apresentaram o maior crescimento percentual de matrículas em um único ano nos últimos 10 anos?
+
 P8: Qual o total de escolas fechadas no último ano?
+
 P9: Qual o total de alunos por raça matriculados nas redes de ensino infantil em 2007?
+
 P10: Qual o número total de escolas por região no ano de 2019?
