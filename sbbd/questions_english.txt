@@ -1,10 +1,19 @@
 Q1: What subjects are most common in vocational high school classes in urban schools in the most recent year available?
+
 Q2: What was the average age of teachers by state over the last 5 years of records?
+
 Q3: What is the total number of students attending high school in urban public schools in the Southern Region over the last 15 years?
+
 Q4: What is the enrollment ratio by gender in rural schools over the last 3 years?
+
 Q5: Show the number of EJA (Youth and Adult Education) enrollments by state over the last 10 years.
+
 Q6: Was there an increase in the number of public school teachers with a master's degree when comparing the current year and the previous year?
+
 Q7: Which 10 schools had the highest percentage growth in enrollment in a single year in the last 10 years?
+
 Q8: What is the total number of schools closed in the last year?
+
 Q9: What is the total number of students by race enrolled in early childhood education systems in 2007?
+
 Q10: What is the total number of schools by region in 2019?
